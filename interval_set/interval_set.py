@@ -301,7 +301,7 @@ def union(itvs1, itvs2):
     intersect = intersection(itvs1, itvs2)
     diff12 = difference(itvs1, itvs2)
     diff21 = difference(itvs2, itvs1)
-    union = aggregate(sorted(intersect + diff12 + diff21))
+    union = aggregate(intersect + diff12 + diff21)
     return union
 
 
@@ -313,11 +313,15 @@ def aggregate(itvs):
     []
     >>> aggregate([(1, 2), (3, 4)])
     [(1, 4)]
+    >>> aggregate([(3, 4), (1, 2)])
+    [(1, 4)]
     """
     lg = len(itvs)
     if lg <= 1:
         return itvs
 
+    # sort intervals
+    itvs = sorted(itvs)
     res = []
     i = 1
     a, b = itvs[0]
