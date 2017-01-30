@@ -15,7 +15,7 @@ An interval set is a list of non overlapping intervals.
 #
 
 
-def interval_set_to_string(intervals):
+def interval_set_to_string(intervals, separator=" "):
     '''
     Convert interval set to strings:
 
@@ -25,30 +25,14 @@ def interval_set_to_string(intervals):
     res = ''
     for (begin, end) in intervals:
         if begin == end:
-            res += " " + str(begin)
+            res += separator + str(begin)
 
         else:
-            res += " " + '{}-{}'.format(begin, end)
-    return res.strip()
+            res += separator + '{}-{}'.format(begin, end)
+    return res.strip(separator)
 
 
-def _ids_to_itervals(ids):
-    """Convert list of ID (int) to list of intervals"""
-    itvs = []
-    if ids:
-        b = ids[0]
-        e = ids[0]
-        for i in ids:
-            if i > (e + 1):  # end itv and prepare new itv
-                itvs.append((b, e))
-                b = i
-            e = i
-        itvs.append((b, e))
-
-    return itvs
-
-
-def string_to_interval_set(s):
+def string_to_interval_set(s, separator=" "):
     """Transforms a string interval set representation to interval set
 
     >>> string_to_interval_set("1 2 3 7-9 13")
@@ -64,8 +48,8 @@ def string_to_interval_set(s):
     if not s:
         return []
     try:
-        res_str = s.split(' ')
-        if '-' in (' ').join(res_str):
+        res_str = s.split(separator)
+        if '-' in (separator).join(res_str):
             # it is already intervals so get it directly
             for inter in res_str:
                 splitted = inter.split('-')
@@ -76,17 +60,45 @@ def string_to_interval_set(s):
                     intervals.append((int(inter), int(inter)))
         else:
             res = sorted([int(x) for x in res_str])
-            intervals = _ids_to_itervals(res)
+            intervals = id_list_to_iterval_set(res)
     except (ValueError, IndexError):
         raise ValueError("Bad interval format. Parsed string is: {}".format(s))
 
-    return aggregate(intervals)
+    return intervals
+
+
+#
+# ID list conversion
+#
+
+def id_list_to_iterval_set(ids):
+    """Convert list of ID (int) to an intervals set"""
+    itvs = []
+    if ids:
+        b = ids[0]
+        e = ids[0]
+        for i in ids:
+            if i > (e + 1):  # end itv and prepare new itv
+                itvs.append((b, e))
+                b = i
+            e = i
+        itvs.append((b, e))
+
+    return itvs
+
+
+def interval_set_to_id_list(itvs):
+    """ Convert an interval set to a list of ID (int)"""
+    ids = []
+    for itv in itvs:
+        b, e = itv
+        ids.extend(range(b, e + 1))
+    return ids
 
 
 #
 # Set conversion
 #
-
 
 def interval_set_to_set(intervals):
     """ Convert interval set to python set
