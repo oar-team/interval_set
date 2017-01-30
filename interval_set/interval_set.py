@@ -36,7 +36,7 @@ def string_to_interval_set(s, separator=" "):
     """Transforms a string interval set representation to interval set
 
     >>> string_to_interval_set("1 2 3 7-9 13")
-    [(1, 3), (7, 9), (13, 13)]
+    [(1, 1), (2, 2), (3, 3), (7, 9), (13, 13)]
     >>> string_to_interval_set("")
     []
     >>> string_to_interval_set("(2,3)")
