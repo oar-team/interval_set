@@ -1,6 +1,6 @@
 from setuptools import setup
 
-setup(name='insterval_set',
+setup(name='interval_set',
       version='1.1',
       description=(
         'Closed interval set toolkit for resources representation in '
